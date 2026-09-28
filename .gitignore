@@ -1,0 +1,18 @@
+# Secrets
+.env
+
+# Dependencies
+node_modules/
+
+# Local data (customer records, user password hashes)
+data/*.db
+data/*.db-shm
+data/*.db-wal
+data/users.json
+
+# Generated output
+hubspot-deal-properties.json
+
+# Editor / tool settings
+.idea/
+.claude/settings.local.json

@@ -1,0 +1,2314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HubSpot ↔ Dynamics Sync Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<!-- Header -->
+<header>
+    <div class="header-content">
+        <div class="logo-section" style="flex: 1; max-width: 400px;"></div>
+        <div class="header-actions">
+            <div class="status-badge">
+                <div class="status-dot"></div>
+                <span>System Online</span>
+            </div>
+            <button onclick="refreshOverviewStats()" class="refresh-btn" title="Refresh">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                </svg>
+            </button>
+            <div class="profile-dropdown" id="profile-dropdown">
+                <button onclick="toggleProfileDropdown()" class="refresh-btn ml-sm" title="User Profile">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                    </svg>
+                </button>
+                <div class="profile-dropdown-content">
+                    <div class="profile-dropdown-header">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        </svg>
+                        <h3>User Profile</h3>
+                    </div>
+                    <div class="profile-dropdown-body">
+                        <!-- Quick Action Buttons -->
+                        <div class="profile-section">
+                            <button class="nav-tab" onclick="openProfileModal()" >
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                </svg>
+                                <span>Edit Profile Information</span>
+                            </button>
+                            <button onclick="openPasswordModal()" class="nav-tab">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                                </svg>
+                                <span>Change Password</span>
+                            </button>
+                        </div>
+                            <button onclick="logout()" class="nav-tab">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                                </svg>
+                                <span>Logout</span>
+                            </button>
+                        </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</header>
+
+<!-- Navigation Tabs -->
+<nav class="nav-tabs">
+    <div class="nav-tabs-container">
+        <button class="nav-tab active" data-tab="overview" onclick="switchTab('overview')">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+            </svg>
+            Overview
+        </button>
+        <button class="nav-tab" data-tab="customers" onclick="switchTab('customers')">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m6-1.13a4 4 0 10-4-4 4 4 0 004 4zm6 0a4 4 0 10-4-4"></path>
+            </svg>
+            Customers
+        </button>
+        <button class="nav-tab" data-tab="products" onclick="switchTab('products')">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.59 13.41L11 3.83A2 2 0 009.59 3.24L4 3a1 1 0 00-1 1l.24 5.59a2 2 0 00.59 1.41l9.58 9.58a2 2 0 002.82 0l6.34-6.34a2 2 0 000-2.83zM7 8a1 1 0 111-1 1 1 0 01-1 1z"></path>
+            </svg>
+            Products &amp; Services
+        </button>
+        <button class="nav-tab" data-tab="subscriptions" onclick="switchTab('subscriptions')">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+            </svg>
+            Subscriptions
+        </button>
+        <button class="nav-tab" data-tab="configuration" onclick="switchTab('configuration')">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+            </svg>
+            Configuration
+        </button>
+    </div>
+</nav>
+
+<div class="container">
+    <!-- Overview Tab -->
+    <div id="tab-overview" class="tab-content active">
+        <!-- Statistics Cards -->
+        <div class="stats-grid">
+            <div class="stat-card stat-card-clickable" onclick="switchTab('customers')" role="button" tabindex="0">
+                <div class="stat-card-content">
+                    <div class="stat-info">
+                        <h3>Customers</h3>
+                        <div class="stat-value primary" id="stat-customers-total">-</div>
+                    </div>
+                    <div class="stat-icon teal">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m6-1.13a4 4 0 10-4-4 4 4 0 004 4zm6 0a4 4 0 10-4-4"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card stat-card-clickable" onclick="switchTab('products')" role="button" tabindex="0">
+                <div class="stat-card-content">
+                    <div class="stat-info">
+                        <h3>Products &amp; Services</h3>
+                        <div class="stat-value primary" id="stat-products-total">-</div>
+                    </div>
+                    <div class="stat-icon indigo">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.59 13.41L11 3.83A2 2 0 009.59 3.24L4 3a1 1 0 00-1 1l.24 5.59a2 2 0 00.59 1.41l9.58 9.58a2 2 0 002.82 0l6.34-6.34a2 2 0 000-2.83zM7 8a1 1 0 111-1 1 1 0 01-1 1z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card stat-card-clickable" onclick="switchTab('subscriptions')" role="button" tabindex="0">
+                <div class="stat-card-content">
+                    <div class="stat-info">
+                        <h3>Subscriptions</h3>
+                        <div class="stat-value primary" id="stat-subscriptions-total">-</div>
+                    </div>
+                    <div class="stat-icon amber">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upcoming Subscription Expirations -->
+        <div class="panel">
+            <div class="panel-header">
+                <div class="panel-title">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                    </svg>
+                    Subscriptions
+                </div>
+                <div class="expiring-header-actions">
+                    <button class="modal-btn modal-btn-cancel" onclick="setAllExpiringGroups(false)">Expand All</button>
+                    <button class="modal-btn modal-btn-cancel" onclick="setAllExpiringGroups(true)">Collapse All</button>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="expiring-list" id="expiring-list">
+                    <div class="empty-state">Loading...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Customers Tab -->
+    <div id="tab-customers" class="tab-content">
+        <div class="panel">
+            <div class="panel-header">
+                <div class="panel-title">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m6-1.13a4 4 0 10-4-4 4 4 0 004 4zm6 0a4 4 0 10-4-4"></path>
+                    </svg>
+                    Customers
+                </div>
+                <button class="modal-btn modal-btn-submit" onclick="openCustomerModal()">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    Add Customer
+                </button>
+            </div>
+            <div class="panel-body">
+                <div class="record-filters">
+                    <button class="record-filter-btn active" data-status="" onclick="setCustomerFilter('', this)">All</button>
+                    <button class="record-filter-btn" data-status="active" onclick="setCustomerFilter('active', this)">Active</button>
+                    <button class="record-filter-btn" data-status="inactive" onclick="setCustomerFilter('inactive', this)">Inactive</button>
+                </div>
+                <div class="record-list" id="customer-list">
+                    <div class="empty-state">Loading customers...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Products & Services Tab -->
+    <div id="tab-products" class="tab-content">
+        <div class="panel">
+            <div class="panel-header">
+                <div class="panel-title">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.59 13.41L11 3.83A2 2 0 009.59 3.24L4 3a1 1 0 00-1 1l.24 5.59a2 2 0 00.59 1.41l9.58 9.58a2 2 0 002.82 0l6.34-6.34a2 2 0 000-2.83zM7 8a1 1 0 111-1 1 1 0 01-1 1z"></path>
+                    </svg>
+                    Products &amp; Services
+                </div>
+                <button class="modal-btn modal-btn-submit" onclick="openProductModal()">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    Add Product/Service
+                </button>
+            </div>
+            <div class="panel-body">
+                <div class="record-filters">
+                    <button class="record-filter-btn active" data-status="" onclick="setProductFilter('', this)">All</button>
+                    <button class="record-filter-btn" data-status="active" onclick="setProductFilter('active', this)">Active</button>
+                    <button class="record-filter-btn" data-status="inactive" onclick="setProductFilter('inactive', this)">Inactive</button>
+                </div>
+                <div class="record-list" id="product-list">
+                    <div class="empty-state">Loading products...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Subscriptions Tab -->
+    <div id="tab-subscriptions" class="tab-content">
+        <div class="panel">
+            <div class="panel-header">
+                <div class="panel-title">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                    </svg>
+                    Subscriptions
+                </div>
+                <button class="modal-btn modal-btn-submit" onclick="openSubscriptionModal()">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    Add Subscription
+                </button>
+            </div>
+            <div class="panel-body">
+                <div class="record-filters">
+                    <button class="record-filter-btn active" data-status="" onclick="setSubscriptionFilter('', this)">All</button>
+                    <button class="record-filter-btn" data-status="active" onclick="setSubscriptionFilter('active', this)">Active</button>
+                    <button class="record-filter-btn" data-status="cancelled" onclick="setSubscriptionFilter('cancelled', this)">Cancelled</button>
+                </div>
+                <div class="record-list" id="subscription-list">
+                    <div class="empty-state">Loading subscriptions...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Configuration Tab -->
+    <div id="tab-configuration" class="tab-content">
+        <!-- Product & Service Categories Section -->
+        <div class="panel collapsible-panel collapsed" id="categories-panel">
+            <div class="panel-header panel-header-collapsible" onclick="toggleCollapsiblePanel('categories-panel')">
+                <div class="panel-title">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                    </svg>
+                    Product &amp; Service Categories
+                </div>
+                <svg class="panel-collapse-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </div>
+            <div class="panel-body">
+                <form id="category-form" class="category-add-form">
+                    <input type="text" id="category-name-input" class="modal-form-input" placeholder="New category name" required>
+                    <button type="submit" class="modal-btn modal-btn-submit">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                        Add Category
+                    </button>
+                </form>
+                <div class="category-list" id="category-list">
+                    <div class="empty-state">Loading categories...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scheduler Section -->
+        <div class="panel">
+            <div class="panel-header">
+                <div class="panel-title">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    Scheduled Sync Jobs
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="info-box">
+                    <div class="info-content">
+                        <svg class="info-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <div class="info-text">
+                            <div class="info-text-title">Automatic Sync Scheduling</div>
+                            <div class="info-text-description">Enable scheduled jobs to automatically sync data between HubSpot and Dynamics 365 F&O at regular intervals.</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Profile Information Modal -->
+<div class="modal-overlay" id="profile-modal">
+    <div class="modal-popup">
+        <div class="modal-header">
+            <div class="modal-header-content">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                </svg>
+                <h2>Profile Information</h2>
+            </div>
+            <button class="modal-close-btn" onclick="closeModal('profile-modal')">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <form id="profile-form-modal">
+            <div class="modal-body">
+                <div class="modal-info-text">
+                    Update your profile information below. Your User ID cannot be changed.
+                </div>
+                <div class="modal-form-group">
+                    <label class="modal-form-label">User ID</label>
+                    <input type="text" id="profile-userid-modal" class="modal-form-input" disabled>
+                </div>
+                <div class="modal-form-group">
+                    <label for="profile-name-modal" class="modal-form-label">Full Name</label>
+                    <input type="text" id="profile-name-modal" class="modal-form-input" placeholder="Enter your full name" required>
+                </div>
+                <div class="modal-form-group">
+                    <label for="profile-email-modal" class="modal-form-label">Email Address</label>
+                    <input type="email" id="profile-email-modal" class="modal-form-input" placeholder="Enter your email" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="modal-btn modal-btn-cancel" onclick="closeModal('profile-modal')">
+                    Cancel
+                </button>
+                <button type="submit" class="modal-btn modal-btn-submit">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    Save Profile
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Change Password Modal -->
+<div class="modal-overlay" id="password-modal">
+    <div class="modal-popup">
+        <div class="modal-header">
+            <div class="modal-header-content">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                </svg>
+                <h2>Change Password</h2>
+            </div>
+            <button class="modal-close-btn" onclick="closeModal('password-modal')">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <form id="password-form-modal">
+            <div class="modal-body">
+                <div class="modal-info-text">
+                    Choose a strong password that's at least 6 characters long.
+                </div>
+                <div class="modal-form-group modal-form-full">
+                    <label for="current-password-modal" class="modal-form-label">Current Password</label>
+                    <input type="password" id="current-password-modal" class="modal-form-input" placeholder="Enter current password" required>
+                </div>
+                <div class="modal-form-group modal-form-full">
+                    <label for="new-password-modal" class="modal-form-label">New Password</label>
+                    <input type="password" id="new-password-modal" class="modal-form-input" placeholder="Enter new password" required>
+                </div>
+                <div class="modal-form-group modal-form-full">
+                    <label for="confirm-password-modal" class="modal-form-label">Confirm New Password</label>
+                    <input type="password" id="confirm-password-modal" class="modal-form-input" placeholder="Confirm new password" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="modal-btn modal-btn-cancel" onclick="closeModal('password-modal')">
+                    Cancel
+                </button>
+                <button type="submit" class="modal-btn modal-btn-submit">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                    </svg>
+                    Update Password
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Add/Edit Customer Modal -->
+<div class="modal-overlay" id="customer-modal">
+    <div class="modal-popup">
+        <div class="modal-header">
+            <div class="modal-header-content">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m6-1.13a4 4 0 10-4-4 4 4 0 004 4zm6 0a4 4 0 10-4-4"></path>
+                </svg>
+                <h2 id="customer-modal-title">Add Customer</h2>
+            </div>
+            <button class="modal-close-btn" onclick="closeModal('customer-modal')">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <form id="customer-form-modal">
+            <input type="hidden" id="customer-id-modal">
+            <div class="modal-body">
+                <div class="modal-form-group">
+                    <label for="customer-name-modal" class="modal-form-label">Full Name</label>
+                    <input type="text" id="customer-name-modal" class="modal-form-input" placeholder="Jane Smith" required>
+                </div>
+                <div class="modal-form-group" id="customer-code-group" style="display:none">
+                    <label for="customer-code-modal" class="modal-form-label">Customer ID</label>
+                    <input type="text" id="customer-code-modal" class="modal-form-input" disabled>
+                </div>
+                <div class="modal-form-group">
+                    <label for="customer-company-modal" class="modal-form-label">Company</label>
+                    <input type="text" id="customer-company-modal" class="modal-form-input" placeholder="Acme Corp">
+                </div>
+                <div class="modal-form-group">
+                    <label for="customer-email-modal" class="modal-form-label">Email Address</label>
+                    <input type="email" id="customer-email-modal" class="modal-form-input" placeholder="jane@example.com">
+                </div>
+                <div class="modal-form-group">
+                    <label for="customer-phone-modal" class="modal-form-label">Phone</label>
+                    <input type="tel" id="customer-phone-modal" class="modal-form-input" placeholder="(555) 123-4567">
+                </div>
+                <div class="modal-form-group modal-form-full">
+                    <label for="customer-address-modal" class="modal-form-label">Address</label>
+                    <input type="text" id="customer-address-modal" class="modal-form-input" placeholder="123 Main St">
+                </div>
+                <div class="modal-form-row">
+                    <div class="modal-form-group">
+                        <label for="customer-city-modal" class="modal-form-label">City</label>
+                        <input type="text" id="customer-city-modal" class="modal-form-input">
+                    </div>
+                    <div class="modal-form-group">
+                        <label for="customer-state-modal" class="modal-form-label">State</label>
+                        <input type="text" id="customer-state-modal" class="modal-form-input">
+                    </div>
+                    <div class="modal-form-group">
+                        <label for="customer-postal-modal" class="modal-form-label">Postal Code</label>
+                        <input type="text" id="customer-postal-modal" class="modal-form-input">
+                    </div>
+                </div>
+                <div class="modal-form-group modal-form-full">
+                    <label for="customer-notes-modal" class="modal-form-label">Notes</label>
+                    <textarea id="customer-notes-modal" class="modal-form-input" rows="3" placeholder="Optional notes"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="modal-btn modal-btn-cancel" onclick="closeModal('customer-modal')">
+                    Cancel
+                </button>
+                <button type="submit" class="modal-btn modal-btn-submit">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    Save Customer
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Add/Edit Product/Service Modal -->
+<div class="modal-overlay" id="product-modal">
+    <div class="modal-popup">
+        <div class="modal-header">
+            <div class="modal-header-content">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.59 13.41L11 3.83A2 2 0 009.59 3.24L4 3a1 1 0 00-1 1l.24 5.59a2 2 0 00.59 1.41l9.58 9.58a2 2 0 002.82 0l6.34-6.34a2 2 0 000-2.83zM7 8a1 1 0 111-1 1 1 0 01-1 1z"></path>
+                </svg>
+                <h2 id="product-modal-title">Add Product/Service</h2>
+            </div>
+            <button class="modal-close-btn" onclick="closeModal('product-modal')">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <form id="product-form-modal">
+            <input type="hidden" id="product-id-modal">
+            <div class="modal-body">
+                <div class="modal-form-group" id="product-code-group" style="display:none">
+                    <label for="product-code-modal" class="modal-form-label">Product ID</label>
+                    <input type="text" id="product-code-modal" class="modal-form-input" disabled>
+                </div>
+                <div class="modal-form-group">
+                    <label for="product-name-modal" class="modal-form-label">Name</label>
+                    <input type="text" id="product-name-modal" class="modal-form-input" placeholder="Premium Support Plan" required>
+                </div>
+                <div class="modal-form-group">
+                    <label for="product-type-modal" class="modal-form-label">Type</label>
+                    <select id="product-type-modal" class="modal-form-input">
+                        <option value="product">Product</option>
+                        <option value="service">Service</option>
+                    </select>
+                </div>
+                <div class="modal-form-group">
+                    <label for="product-category-modal" class="modal-form-label">Category</label>
+                    <select id="product-category-modal" class="modal-form-input">
+                        <option value="">No category</option>
+                    </select>
+                </div>
+                <div class="modal-form-row">
+                    <div class="modal-form-group">
+                        <label for="product-sku-modal" class="modal-form-label">SKU</label>
+                        <input type="text" id="product-sku-modal" class="modal-form-input">
+                    </div>
+                    <div class="modal-form-group">
+                        <label for="product-price-modal" class="modal-form-label">Price</label>
+                        <input type="number" id="product-price-modal" class="modal-form-input" step="0.01" min="0">
+                    </div>
+                    <div class="modal-form-group">
+                        <label for="product-billing-modal" class="modal-form-label">Billing Cycle</label>
+                        <select id="product-billing-modal" class="modal-form-input">
+                            <option value="one-time">One-time</option>
+                            <option value="monthly">Monthly</option>
+                            <option value="yearly">Yearly</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-form-group modal-form-full">
+                    <label for="product-description-modal" class="modal-form-label">Description</label>
+                    <textarea id="product-description-modal" class="modal-form-input" rows="3" placeholder="Optional description"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="modal-btn modal-btn-cancel" onclick="closeModal('product-modal')">
+                    Cancel
+                </button>
+                <button type="submit" class="modal-btn modal-btn-submit">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    Save Product/Service
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Add/Edit Subscription Modal -->
+<div class="modal-overlay" id="subscription-modal">
+    <div class="modal-popup modal-popup-wide">
+        <div class="modal-header">
+            <div class="modal-header-content">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                </svg>
+                <h2 id="subscription-modal-title">Add Subscription</h2>
+            </div>
+            <button class="modal-close-btn" onclick="closeModal('subscription-modal')">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <form id="subscription-form-modal">
+            <input type="hidden" id="subscription-id-modal">
+            <div class="modal-body">
+                <div class="modal-info-text" id="subscription-modal-info">
+                    Only products or services with a monthly or yearly billing cycle can be added as a line item.
+                </div>
+                <div class="modal-form-group">
+                    <label for="subscription-customer-modal" class="modal-form-label">Customer</label>
+                    <select id="subscription-customer-modal" class="modal-form-input" required>
+                        <option value="">Select a customer</option>
+                    </select>
+                </div>
+                <div class="modal-form-group">
+                    <label for="subscription-startdate-modal" class="modal-form-label">Start Date</label>
+                    <input type="date" id="subscription-startdate-modal" class="modal-form-input" required>
+                </div>
+                <div class="modal-form-group">
+                    <label for="subscription-expiration-modal" class="modal-form-label">Expiration Date</label>
+                    <input type="date" id="subscription-expiration-modal" class="modal-form-input" placeholder="No expiration">
+                </div>
+                <div class="modal-form-group modal-form-full">
+                    <label class="modal-form-label">Line Items</label>
+                    <table class="quote-table">
+                        <thead>
+                            <tr>
+                                <th>Product / Service</th>
+                                <th>Units</th>
+                                <th>Price</th>
+                                <th>Subtotal</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="subscription-items-body"></tbody>
+                        <tfoot>
+                            <tr class="quote-total-row">
+                                <td colspan="3">Total</td>
+                                <td id="subscription-total">$0.00</td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    <button type="button" class="modal-btn modal-btn-cancel quote-add-line-btn" onclick="addSubscriptionLine()">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                        Add Line
+                    </button>
+                </div>
+                <div class="modal-form-group modal-form-full">
+                    <label for="subscription-notes-modal" class="modal-form-label">Notes</label>
+                    <textarea id="subscription-notes-modal" class="modal-form-input" rows="3" placeholder="Optional notes about this subscription"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="modal-btn modal-btn-cancel" onclick="closeModal('subscription-modal')">
+                    Cancel
+                </button>
+                <button type="submit" class="modal-btn modal-btn-submit">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    Save Subscription
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Renew Subscription Modal -->
+<div class="modal-overlay" id="renew-modal">
+    <div class="modal-popup">
+        <div class="modal-header">
+            <div class="modal-header-content">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                </svg>
+                <h2>Renew Subscription</h2>
+            </div>
+            <button class="modal-close-btn" onclick="closeModal('renew-modal')">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <form id="renew-form-modal">
+            <input type="hidden" id="renew-id-modal">
+            <div class="modal-body">
+                <div class="modal-info-text">
+                    This subscription has expired. Set a new expiration date to resume renewing it.
+                </div>
+                <div class="modal-form-group modal-form-full">
+                    <label for="renew-expiration-modal" class="modal-form-label">New Expiration Date</label>
+                    <input type="date" id="renew-expiration-modal" class="modal-form-input" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="modal-btn modal-btn-cancel" onclick="closeModal('renew-modal')">
+                    Cancel
+                </button>
+                <button type="submit" class="modal-btn modal-btn-submit">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    Renew
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Socket.io Client Library -->
+<script src="/socket.io/socket.io.js"></script>
+
+<script>
+    // Tab switching
+    function switchTab(tabName) {
+        // Remove active class from all tabs and content
+        document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+        // Add active class to selected tab and content
+        const navTab = document.querySelector(`.nav-tab[data-tab="${tabName}"]`);
+        if (navTab) navTab.classList.add('active');
+        document.getElementById('tab-' + tabName).classList.add('active');
+
+        if (tabName === 'customers') {
+            loadCustomers();
+        } else if (tabName === 'products') {
+            loadProducts();
+        } else if (tabName === 'subscriptions') {
+            loadSubscriptions();
+        } else if (tabName === 'configuration') {
+            loadCategories();
+        }
+    }
+
+    // Expand or collapse a Configuration panel
+    function toggleCollapsiblePanel(panelId) {
+        document.getElementById(panelId).classList.toggle('collapsed');
+    }
+
+    let socket = null;
+
+    // Initialize Socket.io connection
+    function initializeSocket() {
+        socket = io();
+
+        socket.on('connect', () => {
+            console.log('Socket.io connected:', socket.id);
+        });
+
+        socket.on('schedulerUpdate', (scheduler) => {
+            updateSchedulerUI(scheduler);
+        });
+
+        socket.on('disconnect', () => {
+            console.log('Socket.io disconnected');
+        });
+
+        socket.on('connect_error', (error) => {
+            console.error('Socket.io connection error:', error);
+        });
+    }
+
+    // Refresh the Overview tile counts
+    async function refreshOverviewStats() {
+        await Promise.all([loadCustomerStats(), loadProductStats(), loadSubscriptionStats(), loadExpiringSubscriptions()]);
+    }
+
+    /**
+     * Customer Management
+     */
+    let customerStatusFilter = '';
+
+    // Load customer summary stats for the Overview tile
+    async function loadCustomerStats() {
+        try {
+            const response = await fetch('/api/customers/stats');
+            const result = await response.json();
+            if (result.success) {
+                document.getElementById('stat-customers-total').textContent = result.stats.total || '0';
+            }
+        } catch (error) {
+            console.error('Error loading customer stats:', error);
+        }
+    }
+
+    // Load and render the customer list
+    async function loadCustomers() {
+        const listDiv = document.getElementById('customer-list');
+        try {
+            const query = customerStatusFilter ? `?status=${customerStatusFilter}` : '';
+            const response = await fetch(`/api/customers${query}`);
+            const result = await response.json();
+
+            if (!result.success) {
+                listDiv.innerHTML = '<div class="empty-state">Failed to load customers.</div>';
+                return;
+            }
+
+            if (result.customers.length === 0) {
+                listDiv.innerHTML = '<div class="empty-state">No customers yet. Click "Add Customer" to create one.</div>';
+                return;
+            }
+
+            listDiv.innerHTML = result.customers.map(customer => {
+                const statusClass = customer.status === 'active' ? 'success' : 'failed';
+                const toggleLabel = customer.status === 'active' ? 'Deactivate' : 'Activate';
+                return `
+                    <div class="record-item">
+                        <div class="record-row">
+                            <div class="record-main">
+                                <div class="record-header">
+                                    <span class="record-title">${escapeHtml(customer.name)}</span>
+                                    <span class="record-code">${escapeHtml(customer.customerCode || '')}</span>
+                                    <span class="record-status-text ${statusClass}">${customer.status}</span>
+                                </div>
+                                <div class="record-details">
+                                    ${customer.company ? escapeHtml(customer.company) + ' &middot; ' : ''}
+                                    ${customer.email ? escapeHtml(customer.email) : ''}
+                                    ${customer.phone ? ' &middot; ' + escapeHtml(customer.phone) : ''}
+                                </div>
+                            </div>
+                            <div class="record-actions">
+                                <button class="modal-btn modal-btn-cancel" onclick="toggleRecordSubscriptions('customer', ${customer.id}, this)">Subscriptions</button>
+                                <button class="modal-btn modal-btn-cancel" onclick='openCustomerModal(${JSON.stringify(customer).replace(/'/g, "&#39;")})'>Edit</button>
+                                <button class="modal-btn modal-btn-cancel" onclick="toggleCustomerStatus(${customer.id}, '${customer.status}')">${toggleLabel}</button>
+                            </div>
+                        </div>
+                        <div class="record-sublist" id="customer-subs-${customer.id}" style="display:none"></div>
+                    </div>
+                `;
+            }).join('');
+        } catch (error) {
+            console.error('Error loading customers:', error);
+            listDiv.innerHTML = '<div class="empty-state">Failed to load customers.</div>';
+        }
+    }
+
+    // Switch the active/inactive/all filter
+    function setCustomerFilter(status, button) {
+        customerStatusFilter = status;
+        button.parentElement.querySelectorAll('.record-filter-btn').forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        loadCustomers();
+    }
+
+    // Open the Add/Edit Customer modal. Pass a customer object to edit, or nothing to add.
+    function openCustomerModal(customer) {
+        const form = document.getElementById('customer-form-modal');
+        form.reset();
+
+        document.getElementById('customer-modal-title').textContent = customer ? 'Edit Customer' : 'Add Customer';
+        document.getElementById('customer-id-modal').value = customer ? customer.id : '';
+
+        const codeGroup = document.getElementById('customer-code-group');
+        if (customer && customer.customerCode) {
+            document.getElementById('customer-code-modal').value = customer.customerCode;
+            codeGroup.style.display = '';
+        } else {
+            codeGroup.style.display = 'none';
+        }
+
+        document.getElementById('customer-name-modal').value = customer ? customer.name || '' : '';
+        document.getElementById('customer-company-modal').value = customer ? customer.company || '' : '';
+        document.getElementById('customer-email-modal').value = customer ? customer.email || '' : '';
+        document.getElementById('customer-phone-modal').value = customer ? customer.phone || '' : '';
+        document.getElementById('customer-address-modal').value = customer ? customer.address || '' : '';
+        document.getElementById('customer-city-modal').value = customer ? customer.city || '' : '';
+        document.getElementById('customer-state-modal').value = customer ? customer.state || '' : '';
+        document.getElementById('customer-postal-modal').value = customer ? customer.postalCode || '' : '';
+        document.getElementById('customer-notes-modal').value = customer ? customer.notes || '' : '';
+
+        openModal('customer-modal');
+    }
+
+    // Activate or deactivate a customer
+    async function toggleCustomerStatus(id, currentStatus) {
+        const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
+        try {
+            const response = await fetch(`/api/customers/${id}/status`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: newStatus })
+            });
+            const result = await response.json();
+
+            if (result.success) {
+                loadCustomers();
+                loadCustomerStats();
+            } else {
+                showNotification('Error: ' + result.error, 'error');
+            }
+        } catch (error) {
+            console.error('Error updating customer status:', error);
+            showNotification('Error: ' + error.message, 'error');
+        }
+    }
+
+    /**
+     * Products & Services Management
+     */
+    let productStatusFilter = '';
+
+    // Load product/service summary stats for the Overview tile
+    async function loadProductStats() {
+        try {
+            const response = await fetch('/api/products/stats');
+            const result = await response.json();
+            if (result.success) {
+                document.getElementById('stat-products-total').textContent = result.stats.total || '0';
+            }
+        } catch (error) {
+            console.error('Error loading product stats:', error);
+        }
+    }
+
+    // Format a price for display
+    function formatPrice(price) {
+        if (price === null || price === undefined || price === '') return '';
+        const amount = Number(price);
+        if (Number.isNaN(amount)) return '';
+        return '$' + amount.toFixed(2);
+    }
+
+    // Load and render the product/service list
+    async function loadProducts() {
+        const listDiv = document.getElementById('product-list');
+        try {
+            const query = productStatusFilter ? `?status=${productStatusFilter}` : '';
+            const response = await fetch(`/api/products${query}`);
+            const result = await response.json();
+
+            if (!result.success) {
+                listDiv.innerHTML = '<div class="empty-state">Failed to load products.</div>';
+                return;
+            }
+
+            if (result.products.length === 0) {
+                listDiv.innerHTML = '<div class="empty-state">No products or services yet. Click "Add Product/Service" to create one.</div>';
+                return;
+            }
+
+            listDiv.innerHTML = result.products.map(product => {
+                const statusClass = product.status === 'active' ? 'success' : 'failed';
+                const toggleLabel = product.status === 'active' ? 'Deactivate' : 'Activate';
+                const typeLabel = product.type === 'service' ? 'Service' : 'Product';
+                const price = formatPrice(product.price);
+                return `
+                    <div class="record-item">
+                        <div class="record-row">
+                            <div class="record-main">
+                                <div class="record-header">
+                                    <span class="record-title">${escapeHtml(product.name)}</span>
+                                    <span class="record-code">${escapeHtml(product.productCode || '')}</span>
+                                    <span class="record-status-text ${statusClass}">${product.status}</span>
+                                </div>
+                                <div class="record-details">
+                                    ${typeLabel}
+                                    ${product.category ? ' &middot; ' + escapeHtml(product.category) : ''}
+                                    ${product.sku ? ' &middot; SKU: ' + escapeHtml(product.sku) : ''}
+                                    ${price ? ' &middot; ' + price : ''}
+                                    ${product.billingCycle ? ' / ' + escapeHtml(product.billingCycle) : ''}
+                                </div>
+                            </div>
+                            <div class="record-actions">
+                                <button class="modal-btn modal-btn-cancel" onclick="toggleRecordSubscriptions('product', ${product.id}, this)">Subscriptions</button>
+                                <button class="modal-btn modal-btn-cancel" onclick='openProductModal(${JSON.stringify(product).replace(/'/g, "&#39;")})'>Edit</button>
+                                <button class="modal-btn modal-btn-cancel" onclick="toggleProductStatus(${product.id}, '${product.status}')">${toggleLabel}</button>
+                            </div>
+                        </div>
+                        <div class="record-sublist" id="product-subs-${product.id}" style="display:none"></div>
+                    </div>
+                `;
+            }).join('');
+        } catch (error) {
+            console.error('Error loading products:', error);
+            listDiv.innerHTML = '<div class="empty-state">Failed to load products.</div>';
+        }
+    }
+
+    // Switch the active/inactive/all filter
+    function setProductFilter(status, button) {
+        productStatusFilter = status;
+        button.parentElement.querySelectorAll('.record-filter-btn').forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        loadProducts();
+    }
+
+    // Open the Add/Edit Product modal. Pass a product object to edit, or nothing to add.
+    function openProductModal(product) {
+        const form = document.getElementById('product-form-modal');
+        form.reset();
+
+        document.getElementById('product-modal-title').textContent = product ? 'Edit Product/Service' : 'Add Product/Service';
+        document.getElementById('product-id-modal').value = product ? product.id : '';
+
+        const productCodeGroup = document.getElementById('product-code-group');
+        if (product && product.productCode) {
+            document.getElementById('product-code-modal').value = product.productCode;
+            productCodeGroup.style.display = '';
+        } else {
+            productCodeGroup.style.display = 'none';
+        }
+
+        document.getElementById('product-name-modal').value = product ? product.name || '' : '';
+        document.getElementById('product-type-modal').value = product ? product.type || 'product' : 'product';
+        populateCategorySelect(product ? product.category || '' : '');
+        document.getElementById('product-sku-modal').value = product ? product.sku || '' : '';
+        document.getElementById('product-price-modal').value = product ? (product.price ?? '') : '';
+        document.getElementById('product-billing-modal').value = product ? product.billingCycle || 'one-time' : 'one-time';
+        document.getElementById('product-description-modal').value = product ? product.description || '' : '';
+
+        openModal('product-modal');
+    }
+
+    // Activate or deactivate a product/service
+    async function toggleProductStatus(id, currentStatus) {
+        const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
+        try {
+            const response = await fetch(`/api/products/${id}/status`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: newStatus })
+            });
+            const result = await response.json();
+
+            if (result.success) {
+                loadProducts();
+                loadProductStats();
+            } else {
+                showNotification('Error: ' + result.error, 'error');
+            }
+        } catch (error) {
+            console.error('Error updating product status:', error);
+            showNotification('Error: ' + error.message, 'error');
+        }
+    }
+
+    /**
+     * Product & Service Categories (Configuration tab)
+     */
+    let productCategories = [];
+
+    // Load categories, render the Configuration tab list, and refresh the product category dropdown
+    async function loadCategories() {
+        const listDiv = document.getElementById('category-list');
+        try {
+            const response = await fetch('/api/categories');
+            const result = await response.json();
+
+            if (!result.success) {
+                if (listDiv) listDiv.innerHTML = '<div class="empty-state">Failed to load categories.</div>';
+                return;
+            }
+
+            productCategories = result.categories;
+            populateCategorySelect();
+
+            if (!listDiv) return;
+
+            if (productCategories.length === 0) {
+                listDiv.innerHTML = '<div class="empty-state">No categories yet. Add one above.</div>';
+                return;
+            }
+
+            listDiv.innerHTML = productCategories.map(category => `
+                <div class="category-item">
+                    <span class="category-item-name">${escapeHtml(category.name)}</span>
+                    <button class="modal-btn modal-btn-cancel" onclick="deleteCategory(${category.id})">Remove</button>
+                </div>
+            `).join('');
+        } catch (error) {
+            console.error('Error loading categories:', error);
+            if (listDiv) listDiv.innerHTML = '<div class="empty-state">Failed to load categories.</div>';
+        }
+    }
+
+    // Rebuild the Add/Edit Product category dropdown from the loaded categories
+    function populateCategorySelect(selectedValue) {
+        const select = document.getElementById('product-category-modal');
+        if (!select) return;
+
+        const current = selectedValue !== undefined ? selectedValue : select.value;
+        const names = productCategories.map(c => c.name);
+
+        let optionsHtml = '<option value="">No category</option>';
+        optionsHtml += names.map(name => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`).join('');
+
+        // Preserve a legacy/custom category value even if it isn't in the configured list
+        if (current && !names.includes(current)) {
+            optionsHtml += `<option value="${escapeHtml(current)}">${escapeHtml(current)}</option>`;
+        }
+
+        select.innerHTML = optionsHtml;
+        select.value = current || '';
+    }
+
+    // Add a new category
+    async function addCategory(name) {
+        try {
+            const response = await fetch('/api/categories', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name })
+            });
+            const result = await response.json();
+
+            if (result.success) {
+                loadCategories();
+            } else {
+                showNotification('Error: ' + result.error, 'error');
+            }
+        } catch (error) {
+            console.error('Error adding category:', error);
+            showNotification('Error: ' + error.message, 'error');
+        }
+    }
+
+    // Remove a category
+    async function deleteCategory(id) {
+        try {
+            const response = await fetch(`/api/categories/${id}`, { method: 'DELETE' });
+            const result = await response.json();
+
+            if (result.success) {
+                loadCategories();
+            } else {
+                showNotification('Error: ' + result.error, 'error');
+            }
+        } catch (error) {
+            console.error('Error removing category:', error);
+            showNotification('Error: ' + error.message, 'error');
+        }
+    }
+
+    /**
+     * Subscriptions (quote-style: a customer plus one or more product/service line items)
+     */
+    let subscriptionStatusFilter = '';
+    let subscriptionProducts = [];
+    let subscriptionLineKey = 0;
+
+    // Load subscription summary stats for the Overview tile
+    async function loadSubscriptionStats() {
+        try {
+            const response = await fetch('/api/subscriptions/stats');
+            const result = await response.json();
+            if (result.success) {
+                document.getElementById('stat-subscriptions-total').textContent = result.stats.total || '0';
+            }
+        } catch (error) {
+            console.error('Error loading subscription stats:', error);
+        }
+    }
+
+    function formatDate(dateString) {
+        if (!dateString) return '';
+        return new Date(dateString).toLocaleDateString();
+    }
+
+    // Load and render the Overview "Upcoming Subscription Expirations" list, grouped by
+    // an "Overdue" bucket followed by calendar month/year buckets.
+    async function loadExpiringSubscriptions() {
+        const listDiv = document.getElementById('expiring-list');
+        try {
+            const response = await fetch('/api/subscriptions/expiring');
+            const result = await response.json();
+
+            if (!result.success) {
+                listDiv.innerHTML = '<div class="empty-state">Failed to load upcoming expirations.</div>';
+                return;
+            }
+
+            if (result.subscriptions.length === 0) {
+                listDiv.innerHTML = '<div class="empty-state">No subscriptions have an expiration date set.</div>';
+                return;
+            }
+
+            const overdue = result.subscriptions.filter(sub => sub.isExpired);
+            const upcoming = result.subscriptions.filter(sub => !sub.isExpired);
+
+            const groups = [];
+            if (overdue.length > 0) {
+                groups.push({ overdue: true, label: 'Overdue', items: overdue });
+            }
+
+            const byMonth = new Map();
+            upcoming.forEach(sub => {
+                const d = new Date(sub.expirationDate);
+                const key = d.getFullYear() + '-' + d.getMonth();
+                if (!byMonth.has(key)) {
+                    byMonth.set(key, {
+                        overdue: false,
+                        label: d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' }),
+                        items: []
+                    });
+                }
+                byMonth.get(key).items.push(sub);
+            });
+            // upcoming is already sorted ascending by expirationDate from the server, so insertion order is chronological
+            groups.push(...byMonth.values());
+
+            const soonThreshold = new Date();
+            soonThreshold.setDate(soonThreshold.getDate() + 30);
+
+            listDiv.innerHTML = groups.map((group, index) => {
+                const groupId = `expiring-group-${index}`;
+                const itemsHtml = group.items.map(sub => {
+                    const lineSummary = sub.items.map(item => escapeHtml(item.productName || 'Unknown product')).join(', ');
+                    const soon = !group.overdue && new Date(sub.expirationDate) <= soonThreshold;
+                    const highlightClass = group.overdue ? 'expiring-item-overdue' : (soon ? 'expiring-item-soon' : '');
+                    const totalUnits = sub.items.reduce((sum, item) => sum + (item.units || 1), 0);
+                    return `
+                        <div class="expiring-item ${highlightClass}" onclick="switchTab('subscriptions')">
+                            <div class="expiring-item-main">
+                                <span class="expiring-item-customer">${escapeHtml(sub.customerName || 'Unknown customer')}</span>
+                                <span class="expiring-item-products">${lineSummary || 'No line items'}</span>
+                            </div>
+                            <span class="expiring-item-date">${formatDate(sub.expirationDate)} (${totalUnits})</span>
+                        </div>
+                    `;
+                }).join('');
+
+                // Overdue starts expanded (it's urgent); month groups start collapsed to keep the list scannable
+                const collapsedClass = group.overdue ? '' : ' collapsed';
+
+                return `
+                    <div class="expiring-group${collapsedClass}" id="${groupId}">
+                        <div class="expiring-group-header${group.overdue ? ' expiring-group-header-overdue' : ''}" onclick="toggleExpiringGroup('${groupId}')">
+                            <span class="expiring-group-label">
+                                ${group.label}
+                                <span class="expiring-group-count">${group.items.length}</span>
+                            </span>
+                            <svg class="expiring-group-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </div>
+                        <div class="expiring-group-items">${itemsHtml}</div>
+                    </div>
+                `;
+            }).join('');
+        } catch (error) {
+            console.error('Error loading expiring subscriptions:', error);
+            listDiv.innerHTML = '<div class="empty-state">Failed to load upcoming expirations.</div>';
+        }
+    }
+
+    // Expand or collapse a month/year (or Overdue) group in the Subscriptions expirations list
+    function toggleExpiringGroup(groupId) {
+        const group = document.getElementById(groupId);
+        if (group) group.classList.toggle('collapsed');
+    }
+
+    // Expand or collapse every group in the Subscriptions expirations list at once
+    function setAllExpiringGroups(collapsed) {
+        document.querySelectorAll('#expiring-list .expiring-group').forEach(group => {
+            group.classList.toggle('collapsed', collapsed);
+        });
+    }
+
+    // Load and render the subscription (quote) list
+    async function loadSubscriptions() {
+        const listDiv = document.getElementById('subscription-list');
+        try {
+            const query = subscriptionStatusFilter ? `?status=${subscriptionStatusFilter}` : '';
+            const response = await fetch(`/api/subscriptions${query}`);
+            const result = await response.json();
+
+            if (!result.success) {
+                listDiv.innerHTML = '<div class="empty-state">Failed to load subscriptions.</div>';
+                return;
+            }
+
+            if (result.subscriptions.length === 0) {
+                listDiv.innerHTML = '<div class="empty-state">No subscriptions yet. Click "Add Subscription" to create one.</div>';
+                return;
+            }
+
+            listDiv.innerHTML = result.subscriptions.map(sub => {
+                const expired = sub.status === 'active' && sub.isExpired;
+                const statusClass = sub.status === 'cancelled' ? 'failed' : (expired ? 'warning' : 'success');
+                const statusLabel = sub.status === 'cancelled' ? 'cancelled' : (expired ? 'expired' : 'active');
+                const toggleLabel = sub.status === 'active' ? 'Cancel' : 'Reactivate';
+                const lineCount = sub.items.length;
+
+                const lineRows = sub.items.map(item => {
+                    const cycleLabel = item.productBillingCycle === 'yearly' ? 'yearly' : 'monthly';
+                    return `
+                        <div class="quote-line-summary">
+                            <span>${escapeHtml(item.productName || 'Unknown product')} &times; ${item.units || 1}</span>
+                            <span>${formatPrice(item.price) || '$0.00'} / ${cycleLabel} = <strong>${formatPrice(item.subtotal)}</strong></span>
+                        </div>
+                    `;
+                }).join('');
+
+                return `
+                    <div class="record-item">
+                        <div class="record-row">
+                            <div class="record-main">
+                                <div class="record-header">
+                                    <span class="record-title">${escapeHtml(sub.customerName || 'Unknown customer')}</span>
+                                    <span class="record-status-text ${statusClass}">${statusLabel}</span>
+                                </div>
+                                <div class="record-details">
+                                    ${lineCount} line item${lineCount === 1 ? '' : 's'}
+                                    &middot; Total <strong>${formatPrice(sub.total)}</strong>
+                                    &middot; Started ${formatDate(sub.startDate)}
+                                    &middot; ${sub.expirationDate ? 'Expires ' + formatDate(sub.expirationDate) : 'No expiration'}
+                                    ${sub.notes ? '<br>' + escapeHtml(sub.notes) : ''}
+                                </div>
+                                <div class="quote-line-list">${lineRows}</div>
+                            </div>
+                            <div class="record-actions">
+                                <button class="modal-btn modal-btn-cancel" onclick='openSubscriptionModal(${JSON.stringify(sub).replace(/'/g, "&#39;")})'>Edit</button>
+                                ${expired ? `<button class="modal-btn modal-btn-submit" onclick='openRenewModal(${JSON.stringify(sub).replace(/'/g, "&#39;")})'>Renew</button>` : ''}
+                                <button class="modal-btn modal-btn-cancel" onclick="toggleSubscriptionStatus(${sub.id}, '${sub.status}')">${toggleLabel}</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        } catch (error) {
+            console.error('Error loading subscriptions:', error);
+            listDiv.innerHTML = '<div class="empty-state">Failed to load subscriptions.</div>';
+        }
+    }
+
+    // Switch the active/cancelled/all filter
+    function setSubscriptionFilter(status, button) {
+        subscriptionStatusFilter = status;
+        button.parentElement.querySelectorAll('.record-filter-btn').forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        loadSubscriptions();
+    }
+
+    // Build the <option> list for a line item's product/service select
+    function subscriptionProductOptionsHtml(selectedProductId, selectedProductLabel) {
+        const ids = subscriptionProducts.map(p => String(p.id));
+        let html = '<option value="">Select...</option>';
+        html += subscriptionProducts.map(p =>
+            `<option value="${p.id}" ${String(p.id) === String(selectedProductId) ? 'selected' : ''}>${escapeHtml(p.name)} (${p.billingCycle})</option>`
+        ).join('');
+
+        // Preserve a legacy/inactive product on an existing line even if it's no longer in the active recurring list
+        if (selectedProductId && !ids.includes(String(selectedProductId))) {
+            html += `<option value="${selectedProductId}" selected>${escapeHtml(selectedProductLabel || 'Unknown product')}</option>`;
+        }
+        return html;
+    }
+
+    // Add a line-item row to the quote table. Pass an existing item to render it locked (product fixed, only units/price editable).
+    function addSubscriptionLine(existingItem) {
+        const tbody = document.getElementById('subscription-items-body');
+        const key = subscriptionLineKey++;
+        const locked = !!existingItem;
+        const productId = existingItem ? existingItem.productId : '';
+        const productLabel = existingItem ? existingItem.productName : '';
+        const units = existingItem ? (existingItem.units ?? 1) : 1;
+        const price = existingItem ? (existingItem.price ?? '') : '';
+        const itemId = existingItem ? existingItem.id : '';
+
+        const row = document.createElement('tr');
+        row.dataset.key = key;
+        row.dataset.itemId = itemId;
+        row.innerHTML = `
+            <td>
+                <select class="modal-form-input line-product-select" ${locked ? 'disabled' : ''} onchange="onSubscriptionLineProductChange(${key})">
+                    ${subscriptionProductOptionsHtml(productId, productLabel)}
+                </select>
+            </td>
+            <td><input type="number" class="modal-form-input line-units-input" min="1" step="1" value="${units}" oninput="updateSubscriptionLineSubtotal(${key})"></td>
+            <td><input type="number" class="modal-form-input line-price-input" min="0" step="0.01" value="${price}" oninput="updateSubscriptionLineSubtotal(${key})"></td>
+            <td class="quote-subtotal" id="line-subtotal-${key}">$0.00</td>
+            <td><button type="button" class="quote-remove-btn" onclick="removeSubscriptionLine(${key})" title="Remove line">&times;</button></td>
+        `;
+        tbody.appendChild(row);
+        updateSubscriptionLineSubtotal(key);
+    }
+
+    // Remove a line-item row and recalculate the total
+    function removeSubscriptionLine(key) {
+        const row = document.querySelector(`#subscription-items-body tr[data-key="${key}"]`);
+        if (row) row.remove();
+        recalcSubscriptionTotal();
+    }
+
+    // Auto-fill a line's price when its product/service changes
+    function onSubscriptionLineProductChange(key) {
+        const row = document.querySelector(`#subscription-items-body tr[data-key="${key}"]`);
+        if (!row) return;
+        const productId = row.querySelector('.line-product-select').value;
+        const product = subscriptionProducts.find(p => String(p.id) === productId);
+        if (product && product.price !== null && product.price !== undefined) {
+            row.querySelector('.line-price-input').value = product.price;
+        }
+        updateSubscriptionLineSubtotal(key);
+    }
+
+    // Recompute one line's subtotal, then the quote total
+    function updateSubscriptionLineSubtotal(key) {
+        const row = document.querySelector(`#subscription-items-body tr[data-key="${key}"]`);
+        if (!row) return;
+        const units = parseFloat(row.querySelector('.line-units-input').value) || 0;
+        const price = parseFloat(row.querySelector('.line-price-input').value) || 0;
+        const subtotal = units * price;
+        const cell = document.getElementById(`line-subtotal-${key}`);
+        cell.dataset.value = subtotal;
+        cell.textContent = formatPrice(subtotal) || '$0.00';
+        recalcSubscriptionTotal();
+    }
+
+    // Sum every line's subtotal into the quote total
+    function recalcSubscriptionTotal() {
+        const cells = document.querySelectorAll('#subscription-items-body .quote-subtotal');
+        let total = 0;
+        cells.forEach(cell => { total += Number(cell.dataset.value) || 0; });
+        document.getElementById('subscription-total').textContent = formatPrice(total) || '$0.00';
+    }
+
+    // Open the Add/Edit Subscription modal. Pass a subscription object to edit, or nothing to add.
+    async function openSubscriptionModal(subscription) {
+        const form = document.getElementById('subscription-form-modal');
+        form.reset();
+
+        const customerSelect = document.getElementById('subscription-customer-modal');
+        const isEdit = !!subscription;
+
+        document.getElementById('subscription-modal-title').textContent = isEdit ? 'Edit Subscription' : 'Add Subscription';
+        document.getElementById('subscription-id-modal').value = isEdit ? subscription.id : '';
+
+        document.getElementById('subscription-items-body').innerHTML = '';
+        document.getElementById('subscription-total').textContent = '$0.00';
+
+        try {
+            const productsRes = await fetch('/api/products?status=active');
+            const productsResult = await productsRes.json();
+            subscriptionProducts = (productsResult.success ? productsResult.products : [])
+                .filter(p => p.billingCycle === 'monthly' || p.billingCycle === 'yearly');
+        } catch (error) {
+            console.error('Error loading products for subscription:', error);
+            subscriptionProducts = [];
+        }
+
+        if (isEdit) {
+            // Existing subscriptions keep their customer/start date; line items can be edited/added/removed
+            customerSelect.innerHTML = `<option value="${subscription.customerId}">${escapeHtml(subscription.customerName || 'Unknown customer')}</option>`;
+            customerSelect.disabled = true;
+            document.getElementById('subscription-startdate-modal').value = subscription.startDate ? subscription.startDate.slice(0, 10) : '';
+            document.getElementById('subscription-startdate-modal').disabled = true;
+            document.getElementById('subscription-expiration-modal').value = subscription.expirationDate ? subscription.expirationDate.slice(0, 10) : '';
+            document.getElementById('subscription-expiration-modal').disabled = true;
+            document.getElementById('subscription-notes-modal').value = subscription.notes || '';
+
+            subscription.items.forEach(item => addSubscriptionLine(item));
+        } else {
+            customerSelect.disabled = false;
+            document.getElementById('subscription-startdate-modal').disabled = false;
+            document.getElementById('subscription-startdate-modal').value = new Date().toISOString().slice(0, 10);
+            document.getElementById('subscription-expiration-modal').disabled = false;
+            document.getElementById('subscription-expiration-modal').value = '';
+            document.getElementById('subscription-notes-modal').value = '';
+
+            try {
+                const customersRes = await fetch('/api/customers?status=active');
+                const customersResult = await customersRes.json();
+                const customers = customersResult.success ? customersResult.customers : [];
+                customerSelect.innerHTML = '<option value="">Select a customer</option>' +
+                    customers.map(c => `<option value="${c.id}">${escapeHtml(c.name)}</option>`).join('');
+            } catch (error) {
+                console.error('Error loading customers for subscription:', error);
+            }
+
+            addSubscriptionLine();
+        }
+
+        recalcSubscriptionTotal();
+        openModal('subscription-modal');
+    }
+
+    // Cancel or reactivate a subscription
+    async function toggleSubscriptionStatus(id, currentStatus) {
+        const newStatus = currentStatus === 'active' ? 'cancelled' : 'active';
+        try {
+            const response = await fetch(`/api/subscriptions/${id}/status`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: newStatus })
+            });
+            const result = await response.json();
+
+            if (result.success) {
+                loadSubscriptions();
+                loadSubscriptionStats();
+            } else {
+                showNotification('Error: ' + result.error, 'error');
+            }
+        } catch (error) {
+            console.error('Error updating subscription status:', error);
+            showNotification('Error: ' + error.message, 'error');
+        }
+    }
+
+    // Open the Renew Subscription modal, defaulting the new expiration date to a year from the current one
+    function openRenewModal(subscription) {
+        document.getElementById('renew-id-modal').value = subscription.id;
+
+        const base = subscription.expirationDate ? new Date(subscription.expirationDate) : new Date();
+        const defaultNext = new Date(base);
+        defaultNext.setFullYear(defaultNext.getFullYear() + 1);
+        document.getElementById('renew-expiration-modal').value = defaultNext.toISOString().slice(0, 10);
+
+        openModal('renew-modal');
+    }
+
+    // Expand/collapse the subscriptions sublist on a Customer or Product record
+    async function toggleRecordSubscriptions(type, id, button) {
+        const container = document.getElementById(`${type}-subs-${id}`);
+        if (!container) return;
+
+        const isOpen = container.style.display !== 'none';
+        if (isOpen) {
+            container.style.display = 'none';
+            button.textContent = 'Subscriptions';
+            return;
+        }
+
+        button.textContent = 'Hide Subscriptions';
+        container.style.display = 'flex';
+        container.innerHTML = '<div class="empty-state">Loading subscriptions...</div>';
+
+        try {
+            if (type === 'customer') {
+                const response = await fetch(`/api/subscriptions?customerId=${id}`);
+                const result = await response.json();
+
+                if (!result.success) {
+                    container.innerHTML = '<div class="empty-state">Failed to load subscriptions.</div>';
+                    return;
+                }
+
+                if (result.subscriptions.length === 0) {
+                    container.innerHTML = '<div class="empty-state">No subscriptions for this customer yet.</div>';
+                    return;
+                }
+
+                container.innerHTML = result.subscriptions.map(sub => {
+                    const expired = sub.status === 'active' && sub.isExpired;
+                    const statusClass = sub.status === 'cancelled' ? 'failed' : (expired ? 'warning' : 'success');
+                    const statusLabel = sub.status === 'cancelled' ? 'cancelled' : (expired ? 'expired' : 'active');
+                    const lineSummary = sub.items.map(item => `${escapeHtml(item.productName || 'Unknown product')} &times;${item.units || 1}`).join(', ');
+                    return `
+                        <div class="record-subitem">
+                            <div>
+                                <div class="record-subitem-title">${lineSummary || 'No line items'}</div>
+                                <div class="record-subitem-details">
+                                    Total ${formatPrice(sub.total)} &middot; Started ${formatDate(sub.startDate)}
+                                    ${sub.expirationDate ? ' &middot; Expires ' + formatDate(sub.expirationDate) : ''}
+                                </div>
+                            </div>
+                            <span class="record-status-text ${statusClass}">${statusLabel}</span>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                const response = await fetch(`/api/products/${id}/subscription-items`);
+                const result = await response.json();
+
+                if (!result.success) {
+                    container.innerHTML = '<div class="empty-state">Failed to load subscriptions.</div>';
+                    return;
+                }
+
+                if (result.items.length === 0) {
+                    container.innerHTML = '<div class="empty-state">No subscriptions for this product/service yet.</div>';
+                    return;
+                }
+
+                container.innerHTML = result.items.map(item => {
+                    const expired = item.subscriptionStatus === 'active' && item.isExpired;
+                    const statusClass = item.subscriptionStatus === 'cancelled' ? 'failed' : (expired ? 'warning' : 'success');
+                    const statusLabel = item.subscriptionStatus === 'cancelled' ? 'cancelled' : (expired ? 'expired' : 'active');
+                    return `
+                        <div class="record-subitem">
+                            <div>
+                                <div class="record-subitem-title">${escapeHtml(item.customerName || 'Unknown customer')}</div>
+                                <div class="record-subitem-details">
+                                    ${item.units || 1} unit${(item.units || 1) === 1 ? '' : 's'}
+                                    &middot; ${formatPrice(item.subtotal)}
+                                    ${item.subscriptionStatus === 'active' && !expired ? ' &middot; Next renewal ' + formatDate(item.nextRenewalDate) : ''}
+                                </div>
+                            </div>
+                            <span class="record-status-text ${statusClass}">${statusLabel}</span>
+                        </div>
+                    `;
+                }).join('');
+            }
+        } catch (error) {
+            console.error('Error loading subscriptions for record:', error);
+            container.innerHTML = '<div class="empty-state">Failed to load subscriptions.</div>';
+        }
+    }
+
+    // Show notification
+    function showNotification(message, type = 'info') {
+        console.log(message);
+    }
+
+    // Escape HTML to prevent XSS
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    // Toggle profile dropdown
+    function toggleProfileDropdown() {
+        const dropdown = document.getElementById('profile-dropdown');
+        dropdown.classList.toggle('active');
+    }
+
+    // Open modal
+    function openModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        }
+    }
+
+    // Close modal
+    function closeModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.classList.remove('active');
+            document.body.style.overflow = ''; // Restore scrolling
+        }
+    }
+
+    // Open profile modal
+    function openProfileModal() {
+        loadUserProfileIntoModal();
+        openModal('profile-modal');
+        // Close dropdown if open
+        const dropdown = document.getElementById('profile-dropdown');
+        if (dropdown) {
+            dropdown.classList.remove('active');
+        }
+    }
+
+    // Open password modal
+    function openPasswordModal() {
+        openModal('password-modal');
+        // Close dropdown if open
+        const dropdown = document.getElementById('profile-dropdown');
+        if (dropdown) {
+            dropdown.classList.remove('active');
+        }
+    }
+
+    // Load user profile into modal
+    async function loadUserProfileIntoModal() {
+        try {
+            const response = await fetch('/api/user/profile');
+            const result = await response.json();
+
+            if (result.success) {
+                const profile = result.profile;
+                const modalUserid = document.getElementById('profile-userid-modal');
+                const modalName = document.getElementById('profile-name-modal');
+                const modalEmail = document.getElementById('profile-email-modal');
+
+                if (modalUserid) modalUserid.value = profile.userid || '';
+                if (modalName) modalName.value = profile.name || '';
+                if (modalEmail) modalEmail.value = profile.email || '';
+            }
+        } catch (error) {
+            console.error('Error loading profile:', error);
+        }
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        const dropdown = document.getElementById('profile-dropdown');
+        if (dropdown && !dropdown.contains(event.target)) {
+            dropdown.classList.remove('active');
+        }
+    });
+
+    // Close modals when clicking on overlay
+    document.addEventListener('click', function(event) {
+        if (event.target.classList.contains('modal-overlay')) {
+            closeModal(event.target.id);
+        }
+    });
+
+    // Close modals with Escape key
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            const activeModals = document.querySelectorAll('.modal-overlay.active');
+            activeModals.forEach(modal => {
+                closeModal(modal.id);
+            });
+        }
+    });
+
+    // Logout function
+    async function logout() {
+        try {
+            const response = await fetch('/api/auth/logout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                window.location.href = '/login.html';
+            } else {
+                console.error('Logout failed:', result.message);
+                alert('Failed to logout. Please try again.');
+            }
+        } catch (error) {
+            console.error('Logout error:', error);
+            alert('An error occurred during logout.');
+        }
+    }
+
+    // User profile management functions
+    async function loadUserProfile() {
+        try {
+            const response = await fetch('/api/user/profile');
+            const result = await response.json();
+
+            if (result.success) {
+                const profile = result.profile;
+                // Populate dropdown fields
+                const dropdownUserid = document.getElementById('profile-userid-dropdown');
+                const dropdownName = document.getElementById('profile-name-dropdown');
+                const dropdownEmail = document.getElementById('profile-email-dropdown');
+
+                if (dropdownUserid) dropdownUserid.value = profile.userid || '';
+                if (dropdownName) dropdownName.value = profile.name || '';
+                if (dropdownEmail) dropdownEmail.value = profile.email || '';
+            }
+        } catch (error) {
+            console.error('Error loading profile:', error);
+        }
+    }
+
+    // Handle profile form submission
+    document.addEventListener('DOMContentLoaded', function() {
+        // Customer form handler
+        const customerFormModal = document.getElementById('customer-form-modal');
+        if (customerFormModal) {
+            customerFormModal.addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                const button = e.target.querySelector('button[type="submit"]');
+                button.disabled = true;
+
+                const id = document.getElementById('customer-id-modal').value;
+                const payload = {
+                    name: document.getElementById('customer-name-modal').value,
+                    company: document.getElementById('customer-company-modal').value,
+                    email: document.getElementById('customer-email-modal').value,
+                    phone: document.getElementById('customer-phone-modal').value,
+                    address: document.getElementById('customer-address-modal').value,
+                    city: document.getElementById('customer-city-modal').value,
+                    state: document.getElementById('customer-state-modal').value,
+                    postalCode: document.getElementById('customer-postal-modal').value,
+                    notes: document.getElementById('customer-notes-modal').value
+                };
+
+                try {
+                    const response = await fetch(id ? `/api/customers/${id}` : '/api/customers', {
+                        method: id ? 'PUT' : 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        showNotification('Customer saved successfully', 'success');
+                        closeModal('customer-modal');
+                        loadCustomers();
+                        loadCustomerStats();
+                    } else {
+                        showNotification('Error: ' + result.error, 'error');
+                    }
+                } catch (error) {
+                    console.error('Error saving customer:', error);
+                    showNotification('Error: ' + error.message, 'error');
+                } finally {
+                    button.disabled = false;
+                }
+            });
+        }
+
+        // Product/Service form handler
+        const productFormModal = document.getElementById('product-form-modal');
+        if (productFormModal) {
+            productFormModal.addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                const button = e.target.querySelector('button[type="submit"]');
+                button.disabled = true;
+
+                const id = document.getElementById('product-id-modal').value;
+                const priceValue = document.getElementById('product-price-modal').value;
+                const payload = {
+                    name: document.getElementById('product-name-modal').value,
+                    type: document.getElementById('product-type-modal').value,
+                    category: document.getElementById('product-category-modal').value,
+                    sku: document.getElementById('product-sku-modal').value,
+                    price: priceValue === '' ? null : Number(priceValue),
+                    billingCycle: document.getElementById('product-billing-modal').value,
+                    description: document.getElementById('product-description-modal').value
+                };
+
+                try {
+                    const response = await fetch(id ? `/api/products/${id}` : '/api/products', {
+                        method: id ? 'PUT' : 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        showNotification('Product/Service saved successfully', 'success');
+                        closeModal('product-modal');
+                        loadProducts();
+                        loadProductStats();
+                    } else {
+                        showNotification('Error: ' + result.error, 'error');
+                    }
+                } catch (error) {
+                    console.error('Error saving product:', error);
+                    showNotification('Error: ' + error.message, 'error');
+                } finally {
+                    button.disabled = false;
+                }
+            });
+        }
+
+        // Category form handler
+        const categoryForm = document.getElementById('category-form');
+        if (categoryForm) {
+            categoryForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                const input = document.getElementById('category-name-input');
+                const name = input.value.trim();
+                if (!name) return;
+
+                const button = e.target.querySelector('button[type="submit"]');
+                button.disabled = true;
+
+                await addCategory(name);
+                input.value = '';
+                button.disabled = false;
+            });
+        }
+
+        // Subscription form handler
+        const subscriptionFormModal = document.getElementById('subscription-form-modal');
+        if (subscriptionFormModal) {
+            subscriptionFormModal.addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                const button = e.target.querySelector('button[type="submit"]');
+
+                const rows = Array.from(document.querySelectorAll('#subscription-items-body tr'));
+                if (rows.length === 0) {
+                    showNotification('Add at least one line item', 'error');
+                    return;
+                }
+
+                const items = rows.map(row => ({
+                    id: row.dataset.itemId ? Number(row.dataset.itemId) : undefined,
+                    productId: Number(row.querySelector('.line-product-select').value),
+                    units: row.querySelector('.line-units-input').value,
+                    price: row.querySelector('.line-price-input').value
+                }));
+
+                if (items.some(item => !item.productId)) {
+                    showNotification('Select a product/service for every line', 'error');
+                    return;
+                }
+
+                button.disabled = true;
+
+                const id = document.getElementById('subscription-id-modal').value;
+                const payload = {
+                    customerId: Number(document.getElementById('subscription-customer-modal').value),
+                    notes: document.getElementById('subscription-notes-modal').value,
+                    startDate: document.getElementById('subscription-startdate-modal').value,
+                    expirationDate: document.getElementById('subscription-expiration-modal').value || null,
+                    items
+                };
+
+                try {
+                    const response = await fetch(id ? `/api/subscriptions/${id}` : '/api/subscriptions', {
+                        method: id ? 'PUT' : 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        showNotification('Subscription saved successfully', 'success');
+                        closeModal('subscription-modal');
+                        loadSubscriptions();
+                        loadSubscriptionStats();
+                    } else {
+                        showNotification('Error: ' + result.error, 'error');
+                    }
+                } catch (error) {
+                    console.error('Error saving subscription:', error);
+                    showNotification('Error: ' + error.message, 'error');
+                } finally {
+                    button.disabled = false;
+                }
+            });
+        }
+
+        // Renew Subscription form handler
+        const renewFormModal = document.getElementById('renew-form-modal');
+        if (renewFormModal) {
+            renewFormModal.addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                const button = e.target.querySelector('button[type="submit"]');
+                button.disabled = true;
+
+                const id = document.getElementById('renew-id-modal').value;
+                const expirationDate = document.getElementById('renew-expiration-modal').value;
+
+                try {
+                    const response = await fetch(`/api/subscriptions/${id}/renew`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ expirationDate })
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        showNotification('Subscription renewed successfully', 'success');
+                        closeModal('renew-modal');
+                        loadSubscriptions();
+                        loadSubscriptionStats();
+                    } else {
+                        showNotification('Error: ' + result.error, 'error');
+                    }
+                } catch (error) {
+                    console.error('Error renewing subscription:', error);
+                    showNotification('Error: ' + error.message, 'error');
+                } finally {
+                    button.disabled = false;
+                }
+            });
+        }
+
+        // Modal form handlers
+        const profileFormModal = document.getElementById('profile-form-modal');
+        if (profileFormModal) {
+            profileFormModal.addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                const button = e.target.querySelector('button[type="submit"]');
+                button.disabled = true;
+
+                try {
+                    const response = await fetch('/api/user/profile', {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            name: document.getElementById('profile-name-modal').value,
+                            email: document.getElementById('profile-email-modal').value
+                        })
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        showNotification('Profile updated successfully', 'success');
+                        closeModal('profile-modal');
+                        // Refresh both dropdown and modal with updated data
+                        loadUserProfile();
+                    } else {
+                        showNotification('Error: ' + result.error, 'error');
+                    }
+                } catch (error) {
+                    console.error('Error updating profile:', error);
+                    showNotification('Error: ' + error.message, 'error');
+                } finally {
+                    button.disabled = false;
+                }
+            });
+        }
+
+        const passwordFormModal = document.getElementById('password-form-modal');
+        if (passwordFormModal) {
+            passwordFormModal.addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                const button = e.target.querySelector('button[type="submit"]');
+                const currentPassword = document.getElementById('current-password-modal').value;
+                const newPassword = document.getElementById('new-password-modal').value;
+                const confirmPassword = document.getElementById('confirm-password-modal').value;
+
+                // Validate passwords
+                if (!currentPassword || !newPassword || !confirmPassword) {
+                    showNotification('All password fields are required', 'error');
+                    return;
+                }
+
+                if (newPassword !== confirmPassword) {
+                    showNotification('New passwords do not match', 'error');
+                    return;
+                }
+
+                if (newPassword.length < 6) {
+                    showNotification('New password must be at least 6 characters', 'error');
+                    return;
+                }
+
+                button.disabled = true;
+
+                try {
+                    const response = await fetch('/api/user/password', {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            currentPassword,
+                            newPassword
+                        })
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        showNotification('Password updated successfully', 'success');
+                        // Clear password fields
+                        document.getElementById('current-password-modal').value = '';
+                        document.getElementById('new-password-modal').value = '';
+                        document.getElementById('confirm-password-modal').value = '';
+                        closeModal('password-modal');
+                    } else {
+                        showNotification('Error: ' + result.error, 'error');
+                    }
+                } catch (error) {
+                    console.error('Error updating password:', error);
+                    showNotification('Error: ' + error.message, 'error');
+                } finally {
+                    button.disabled = false;
+                }
+            });
+        }
+
+        // Dropdown form handlers
+        const profileFormDropdown = document.getElementById('profile-form-dropdown');
+        if (profileFormDropdown) {
+            profileFormDropdown.addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                const button = e.target.querySelector('button[type="submit"]');
+                button.disabled = true;
+
+                try {
+                    const response = await fetch('/api/user/profile', {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            name: document.getElementById('profile-name-dropdown').value,
+                            email: document.getElementById('profile-email-dropdown').value
+                        })
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        showNotification('Profile updated successfully', 'success');
+                    } else {
+                        showNotification('Error: ' + result.error, 'error');
+                    }
+                } catch (error) {
+                    console.error('Error updating profile:', error);
+                    showNotification('Error: ' + error.message, 'error');
+                } finally {
+                    button.disabled = false;
+                }
+            });
+        }
+
+        const passwordFormDropdown = document.getElementById('password-form-dropdown');
+        if (passwordFormDropdown) {
+            passwordFormDropdown.addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                const button = e.target.querySelector('button[type="submit"]');
+                const currentPassword = document.getElementById('current-password-dropdown').value;
+                const newPassword = document.getElementById('new-password-dropdown').value;
+                const confirmPassword = document.getElementById('confirm-password-dropdown').value;
+
+                // Validate passwords
+                if (!currentPassword || !newPassword || !confirmPassword) {
+                    showNotification('All password fields are required', 'error');
+                    return;
+                }
+
+                if (newPassword !== confirmPassword) {
+                    showNotification('New passwords do not match', 'error');
+                    return;
+                }
+
+                if (newPassword.length < 6) {
+                    showNotification('New password must be at least 6 characters', 'error');
+                    return;
+                }
+
+                button.disabled = true;
+
+                try {
+                    const response = await fetch('/api/user/password', {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            currentPassword,
+                            newPassword
+                        })
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        showNotification('Password updated successfully', 'success');
+                        // Clear password fields
+                        document.getElementById('current-password-dropdown').value = '';
+                        document.getElementById('new-password-dropdown').value = '';
+                        document.getElementById('confirm-password-dropdown').value = '';
+                    } else {
+                        showNotification('Error: ' + result.error, 'error');
+                    }
+                } catch (error) {
+                    console.error('Error updating password:', error);
+                    showNotification('Error: ' + error.message, 'error');
+                } finally {
+                    button.disabled = false;
+                }
+            });
+        }
+    });
+
+    // Scheduler functions
+    async function loadSchedulerStatus() {
+        try {
+            const response = await fetch('/api/scheduler/status');
+            const result = await response.json();
+
+            if (result.success) {
+                updateSchedulerUI(result.scheduler);
+            }
+        } catch (error) {
+            console.error('Error loading scheduler status:', error);
+        }
+    }
+
+    function updateSchedulerUI(scheduler) {
+        Object.keys(scheduler).forEach(jobName => {
+            const job = scheduler[jobName];
+            const toggle = document.getElementById(`toggle-${jobName}`);
+            const select = document.getElementById(`schedule-${jobName}`);
+            const metaElement = document.getElementById(`meta-${jobName}`);
+
+            if (toggle) {
+                toggle.checked = job.enabled;
+            }
+
+            if (select) {
+                // Try to match the cron expression to a select option
+                const options = select.querySelectorAll('option');
+                let matched = false;
+                options.forEach(option => {
+                    if (option.value === job.cronExpression) {
+                        option.selected = true;
+                        matched = true;
+                    }
+                });
+                // If no match, add custom option
+                if (!matched && job.cronExpression) {
+                    const customOption = document.createElement('option');
+                    customOption.value = job.cronExpression;
+                    customOption.textContent = `Custom (${job.cronExpression})`;
+                    customOption.selected = true;
+                    select.appendChild(customOption);
+                }
+            }
+
+            if (metaElement) {
+                let statusHtml = '';
+                if (job.running) {
+                    statusHtml += '<span class="meta-badge success">Running</span>';
+                } else if (job.enabled) {
+                    statusHtml += '<span class="meta-badge warning">Enabled (starting...)</span>';
+                } else {
+                    statusHtml += '<span class="meta-badge">Disabled</span>';
+                }
+
+                if (job.lastRun) {
+                    const lastRunTime = new Date(job.lastRun).toLocaleString();
+                    statusHtml += `<span class="meta-badge">Last run: ${lastRunTime}</span>`;
+                }
+
+                if (job.runCount > 0) {
+                    statusHtml += `<span class="meta-badge">${job.runCount} runs</span>`;
+                }
+
+                metaElement.innerHTML = statusHtml;
+            }
+        });
+    }
+
+    async function toggleScheduler(jobName, enabled) {
+        const toggle = document.getElementById(`toggle-${jobName}`);
+
+        try {
+            const response = await fetch(`/api/scheduler/${jobName}/toggle`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ enabled })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                showNotification(`Scheduler ${jobName} ${enabled ? 'enabled' : 'disabled'}`, 'success');
+                updateSchedulerUI(result.scheduler);
+            } else {
+                showNotification('Error: ' + result.error, 'error');
+                // Revert toggle
+                if (toggle) toggle.checked = !enabled;
+            }
+        } catch (error) {
+            console.error('Error toggling scheduler:', error);
+            showNotification('Error: ' + error.message, 'error');
+            // Revert toggle
+            if (toggle) toggle.checked = !enabled;
+        }
+    }
+
+    async function updateSchedule(jobName, cronExpression) {
+        try {
+            const response = await fetch(`/api/scheduler/${jobName}/schedule`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ cronExpression })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                showNotification(`Schedule updated for ${jobName}`, 'success');
+                updateSchedulerUI(result.scheduler);
+            } else {
+                showNotification('Error: ' + result.error, 'error');
+            }
+        } catch (error) {
+            console.error('Error updating schedule:', error);
+            showNotification('Error: ' + error.message, 'error');
+        }
+    }
+
+    async function runSchedulerNow(jobName) {
+        try {
+            const response = await fetch(`/api/scheduler/${jobName}/run`, {
+                method: 'POST'
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                showNotification(`Running ${jobName} sync...`, 'info');
+            } else {
+                showNotification('Error: ' + result.error, 'error');
+            }
+        } catch (error) {
+            console.error('Error running scheduler:', error);
+            showNotification('Error: ' + error.message, 'error');
+        }
+    }
+
+    // Initialize on page load
+    window.addEventListener('DOMContentLoaded', function() {
+        initializeSocket();
+        loadUserProfile();
+        loadSchedulerStatus();
+        loadCustomerStats();
+        loadProductStats();
+        loadSubscriptionStats();
+        loadExpiringSubscriptions();
+        loadCategories();
+
+        // Refresh Overview tile counts every 30 seconds
+        setInterval(refreshOverviewStats, 30000);
+    });
+
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', function() {
+        if (socket) {
+            socket.disconnect();
+        }
+    });
+</script>
+</body>
+</html>
